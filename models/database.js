@@ -15,8 +15,23 @@ mongoose.connect(url)
 })
 
 const phoneSchema = new mongoose.Schema({
-    name: String,
-    number: Number,
+    name: {
+      type: String,
+      minLength: 3,
+      required: true
+    },
+    number: {
+      type: String,
+      minLength: 8,
+      required: true,
+      validate: {
+        validator: function(value) {
+          const regex = /^\d{2,3}-\d+$/;
+          return regex.test(value);
+        },
+        message: props => `${props.value} is invalid! Please use the format XX-XXXXX.`
+      },
+    }
 })
 
 phoneSchema.set('toJSON', {
